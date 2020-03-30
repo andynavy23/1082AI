@@ -166,15 +166,11 @@ def handle_text_message(event):
 @handler.add(JoinEvent)
 def handle_join(event):
     newcoming_text = "謝謝邀請我這個機器來此群組！！我會盡力為大家服務的～"
-    groupID = {"groupID": event.source.group_id}
-    group_match_output = groups_db.find_one({"groupID": groupID})
-
-    if group_match_output is None:
-        groups_db.insert_one(groupID)
-        admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
-        line_bot_api.push_message(admin_user_id,TextMessage(text='新加入一個群組已將groupID存入資料庫！'))
-    else:
-        line_bot_api.push_message(admin_user_id,TextMessage(text='已加入群組！'))
+    groupID = {"groupID": event.source.group_id, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
+    
+    groups_db.insert_one(groupID)
+    admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
+    line_bot_api.push_message(admin_user_id,TextMessage(text='剛加入一個群組已將groupID存入資料庫！'))
     
     line_bot_api.reply_message(
             event.reply_token,
