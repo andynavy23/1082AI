@@ -72,10 +72,15 @@
 
 5. 新增規則至資料庫（單筆規則新增）
     - [網頁表單](https://ai1082.herokuapp.com/)使用GET Form，需要填入關鍵字、規則、輸出等資訊
-    - 測試關鍵字：通知
-    - 測試規則：line_bot_api.push_message(admin_user_id,TextMessage(text='有人剛叫我通知你！'))
-    - 測試輸出：通知管理員
     ![網頁表單](/img/網頁表單.png)
+    - 關鍵字1：通知
+    - 規則1：line_bot_api.push_message(admin_user_id,TextMessage(text='有人剛叫我通知你！'))
+    - 輸出1：通知管理員
+    ![關鍵字1](/img/關鍵字1.png)
+    - 關鍵字2：檢舉
+    - 規則2：line_bot_api.push_message(admin_user_id,TextMessage(text='有人剛叫我檢舉你！'))
+    - 輸出2：檢舉管理員
+    ![關鍵字2](/img/關鍵字2.png)
 
 6. 機器人判斷訊息內容是否包含關鍵字，進而觸發規則產生輸出  
     - 只有關鍵字  
