@@ -50,11 +50,18 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId 
 
 # connection mongodb
+'''
 db_name = 'heroku_tt6tdsz7'
 db_host = 'ds029426.mlab.com'
 db_port = 29426
 db_user = 'heroku_tt6tdsz7'
 db_pass = 'nd5f0njm3jh544ph8pmp32uo6i'
+'''
+db_name = os.environ.get('db_name')
+db_host = os.environ.get('db_host')
+db_port = os.environ.get('db_port')
+db_user = os.environ.get('db_user')
+db_pass = os.environ.get('db_pass')
 client = MongoClient(db_host,db_port,retryWrites=False)
 db = client[db_name]
 db.authenticate(db_user,db_pass)
@@ -66,8 +73,12 @@ log_db = db['log']
 app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
+'''
 channel_secret = '44438605c6135fcaae7ef26a8840c83e'
 channel_access_token = 'cyhHv06/QDhSh9KpiYzhxQxJNcn4/UqgWazZxVDMG9fTTODbCiGLTX6otM03nf+NG/inIA43HS5aO1fdDifm3YGkpG4ZlPkDTO1Q4bfwNNSEYTkdMSqMwS/8H3mpJ+G+cQmbY4r69sY7XeWIiYyVawdB04t89/1O/w1cDnyilFU='
+'''
+channel_secret = os.environ.get('channel_secret')
+channel_access_token = os.environ.get('channel_access_token')
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -75,7 +86,8 @@ if channel_access_token is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
-admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
+# admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
+admin_user_id = os.environ.get('admin_user_id')
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
