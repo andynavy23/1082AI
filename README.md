@@ -71,7 +71,7 @@
     ![資料庫更新](/img/資料庫更新.png)
 
 5. 新增規則至資料庫（單筆規則新增）
-    - 網頁表單使用GET Form，需要填入關鍵字、規則、輸出等資訊
+    - [網頁表單](https://ai1082.herokuapp.com/)使用GET Form，需要填入關鍵字、規則、輸出等資訊
     - 測試關鍵字：通知
     - 測試規則：line_bot_api.push_message(admin_user_id,TextMessage(text='有人剛叫我通知你！'))
     - 測試輸出：通知管理員
