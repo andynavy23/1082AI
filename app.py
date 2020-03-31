@@ -21,7 +21,7 @@ import sys
 import tempfile
 from argparse import ArgumentParser
 # about Flask import
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -91,6 +91,9 @@ def make_static_tmp_dir():
         else:
             raise
 
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -177,7 +180,20 @@ def handle_join(event):
             TextMessage(text=newcoming_text)
         )
     
-    
+@app.route("/rules", methods=['GET'])
+def rules():
+    keyword = request.args.get('keyword')
+    rule = request.args.get('rule')
+    output = request.args.get('output')
+    keyword_match_output = rules_db.find_one({"keyword": keyword})
+    if keyword_match_output is None:
+        rule_info = {"keyword": keyword,
+                     "rule": rule,
+                     "output": output}
+        rules_db.insert_one(rule_info)
+        return "Rule added to database successfully !!"
+    else:
+        return "Rule addition to database failed !!"
 
 
 if __name__ == "__main__":
