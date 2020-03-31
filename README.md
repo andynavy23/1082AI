@@ -70,6 +70,21 @@
     - GUI畫面  
     ![資料庫更新](/img/資料庫更新.png)
 
+5. 新增規則至資料庫（單筆規則新增）
+    - 網頁表單使用GET Form，需要填入關鍵字、規則、輸出等資訊
+    - 測試關鍵字：通知
+    - 測試規則：line_bot_api.push_message(admin_user_id,TextMessage(text='有人剛叫我通知你！'))
+    - 測試輸出：通知管理員
+    ![網頁表單](/img/網頁表單.png)
+
+6. 機器人判斷訊息內容是否包含關鍵字，進而觸發規則產生輸出
+    - 只有關鍵字
+    ![只有關鍵字](/img/只有關鍵字.png)
+    - 內容包含關鍵字
+    ![內容包含關鍵字](/img/內容包含關鍵字.png)
+    ![規則輸出](/img/規則輸出.png)
+
+
 ### 程式碼說明：
 #### 執行主程式 app.py
 ```Python
@@ -124,7 +139,8 @@ log_db = db['log']
 
 app = Flask(__name__)
 
-## LineBot 權杖設定
+## 環境變數設定
+admin_user_id = 'your admin LINE user ID'
 channel_secret = 'your channel secret'
 channel_access_token = 'your channel access token'
 if channel_secret is None:
@@ -136,6 +152,11 @@ if channel_access_token is None:
 
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
+
+## 首頁
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 ## 設定POST請求位置與例外發生時回覆的訊息函式
 @app.route("/callback", methods=['POST'])
@@ -178,7 +199,7 @@ def handle_text_message(event):
         if isinstance(event.source, SourceGroup):
              # 比對報到者資料是否已經存在
             user_match_output = users_db.find_one({"userID": userID})
-            if user_match_output is None:
+            if user_match_output == None:
                 user_info = {"groupID": groupID,
                             "userID": userID,
                             "display_name": profile.display_name,
@@ -201,6 +222,15 @@ def handle_text_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="資料登記失敗，請聯絡老師或助教！！"))
+    elif len(keyword_match_output) != 0:
+        # function for exec
+        def func():
+            exec(rule_string)
+        for rule_data in keyword_match_output:
+            rule_string = str(rule_data['rule'])
+            func()
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='觸發規則～'))
     else:
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='Echo mode: ' + event.message.text))
@@ -214,13 +244,29 @@ def handle_join(event):
     groupID = {"groupID": event.source.group_id, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
     # 加入資料集合中
     groups_db.insert_one(groupID)
-    admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
     line_bot_api.push_message(admin_user_id,TextMessage(text='剛加入一個群組已將groupID存入資料庫！'))
     
     line_bot_api.reply_message(
             event.reply_token,
             TextMessage(text=newcoming_text)
         )
+
+## 新增規則資料設定 
+@app.route("/rules", methods=['GET'])
+def rules():
+    keyword = request.args.get('keyword')
+    rule = request.args.get('rule')
+    output = request.args.get('output')
+    keyword_match_output = rules_db.find_one({"keyword": keyword})
+    if keyword_match_output is None:
+        rule_info = {"keyword": keyword,
+                     "rule": rule,
+                     "output": output}
+        rules_db.insert_one(rule_info)
+        return "Rule added to database successfully !!"
+    else:
+        return "Rule addition to database failed !!"
+
 
 ## 設定 Web App 開啟的 Domain 與 Port
 if __name__ == "__main__":
