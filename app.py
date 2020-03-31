@@ -20,7 +20,7 @@ import os
 import sys
 import tempfile
 from argparse import ArgumentParser
-
+# about Flask import
 from flask import Flask, request, abort
 
 from linebot import (
