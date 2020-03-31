@@ -122,6 +122,10 @@ def handle_text_message(event):
     text = event.message.text
     userID = event.source.user_id
     profile = line_bot_api.get_profile(event.source.user_id)
+    keyword_match_output = []
+    for x in rules_db.find():
+        if x['keyword'] in text:
+            keyword_match_output.append(x)
     try:
         groupID = event.source.group_id
     except:
@@ -139,7 +143,7 @@ def handle_text_message(event):
         if isinstance(event.source, SourceGroup):
             user_match_output = users_db.find_one({"userID": userID})
 
-            if user_match_output is None:
+            if user_match_output == None:
                 user_info = {"groupID": groupID,
                             "userID": userID,
                             "display_name": profile.display_name,
@@ -162,6 +166,11 @@ def handle_text_message(event):
             line_bot_api.reply_message(
                 event.reply_token,
                 TextSendMessage(text="資料登記失敗，請聯絡老師或助教！！"))
+    elif len(keyword_match_output) != 0:
+        for rule_data in keyword_match_output:
+            exec(str(rule_data['rule']),{'a': 1,'b': 2})
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='觸發規則～'))
     else:
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='Echo mode: ' + event.message.text))
