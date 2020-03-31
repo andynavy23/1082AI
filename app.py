@@ -75,6 +75,7 @@ if channel_access_token is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
 
+admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
@@ -167,8 +168,12 @@ def handle_text_message(event):
                 event.reply_token,
                 TextSendMessage(text="資料登記失敗，請聯絡老師或助教！！"))
     elif len(keyword_match_output) != 0:
+        # function for exec
+        def func():
+            exec(rule_string)
         for rule_data in keyword_match_output:
-            exec(str(rule_data['rule']),{'a': 1,'b': 2})
+            rule_string = str(rule_data['rule'])
+            func()
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='觸發規則～'))
     else:
@@ -181,7 +186,6 @@ def handle_join(event):
     groupID = {"groupID": event.source.group_id, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
     
     groups_db.insert_one(groupID)
-    admin_user_id = 'U63ab88ce90a6b2780293fec894a99ac2'
     line_bot_api.push_message(admin_user_id,TextMessage(text='剛加入一個群組已將groupID存入資料庫！'))
     
     line_bot_api.reply_message(
