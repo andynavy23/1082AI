@@ -17,6 +17,7 @@
  - Ngrok（本地開發測試）
  - Line BOT（聊天機器人框架）
  - Robo 3T（資料庫GUI介面）
+ - Cloudinary（檔案儲存庫）
 
 ### 相關套件（可以參考 requirements.txt）：
  - Flask
@@ -24,6 +25,7 @@
  - pymongo
  - requests
  - gunicorn
+ - cloudinary
 
 ### 資料庫格式（Heroku 擴充功能 mLab MongoDB）：
  - users（Collection）
@@ -125,8 +127,11 @@ import os
 import sys
 import tempfile
 from argparse import ArgumentParser
+from werkzeug.utils import secure_filename
+
 # about Flask import
 from flask import Flask, request, abort
+
 # about linebot import
 from linebot import (
     LineBotApi, WebhookHandler
@@ -147,6 +152,11 @@ from linebot.models import (
 # about mongodb import
 from pymongo import MongoClient
 from bson.objectid import ObjectId 
+
+# about cloudinary import
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+from cloudinary.uploader import create_zip
 
 ## 資料庫設定與連接
 db_name = 'Mongodb資料庫名稱'
@@ -179,10 +189,33 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-## 首頁
-@app.route('/')
-def index():
-    return render_template('index.html')
+## 管理者頁面
+@app.route('/Admin')
+def Admin():
+    return render_template('Admin.html')
+
+## 首頁（上傳檔案頁面）
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    upload_result = None
+
+    if request.method == 'POST':
+        file_to_upload = request.files['file']
+        file_to_upload_name = secure_filename(file_to_upload.filename)
+        if file_to_upload:
+            upload_result = upload(file_to_upload,
+             resource_type="raw", 
+             folder = "report_folder/",
+             overwrite = True,
+             public_id = file_to_upload_name,
+             tags = 'report',
+             use_filename = True)
+            txt = '上傳成功！'
+        else:
+            txt = '請上傳檔案！'
+    else:
+        txt = '上傳失敗，請聯絡老師或助教！'
+    return render_template('index.html', upload_result=upload_result, txt=txt)
 
 ## 設定POST請求位置與例外發生時回覆的訊息函式
 @app.route("/callback", methods=['POST'])
@@ -231,13 +264,18 @@ def handle_text_message(event):
                             "display_name": profile.display_name,
                             "picture_url": profile.picture_url,
                             "status_message": profile.status_message,
-                            "join_datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
+                            "join_datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                            "groupID": groupID}
                 users_db.insert_one(user_info)
                 line_bot_api.reply_message(
                     event.reply_token, [
                         TextSendMessage(text=profile.display_name + '的資料登記完成！'),
                     ]
                 )
+            elif text == '下載報告':
+                download_info = create_zip(tags = 'report', resource_type = 'raw')
+                line_bot_api.reply_message(
+                    event.reply_token, TextSendMessage(text=download_info['url']))
             else:
                 line_bot_api.reply_message(
                     event.reply_token, [
