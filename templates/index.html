@@ -8,11 +8,6 @@
 {% if upload_result %}
   <h3>Upload API Result</h3>
   <div>{{ upload_result }}</div>
-  <h3>Thumbnails:</h3>
-  <div><a href="{{thumbnail_url1}}">{{thumbnail_url1}}</a></div>
-  <img src="{{ thumbnail_url1 }}"/>
-  <div><a href="{{thumbnail_url2}}">{{thumbnail_url2}}</a></div>
-  <img src="{{ thumbnail_url2 }}"/>
   <h3>Original:</h3>
   <img src="{{ upload_result['url'] }}"/>
 {% endif %}
