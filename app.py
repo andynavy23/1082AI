@@ -111,7 +111,7 @@ def upload_file():
         if file_to_upload:
             upload_result = upload(file_to_upload,
              resource_type="raw", 
-             folder = "report_folder/", 
+             folder = "report_folder/"
              '''
              public_id = 'test'
              '''
