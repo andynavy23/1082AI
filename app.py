@@ -109,7 +109,6 @@ def upload_file():
     if request.method == 'POST':
         file_to_upload = request.files['file']
         file_to_upload_name = secure_filename(file_to_upload.filename)
-        print(file_to_upload_name)
         if file_to_upload:
             upload_result = upload(file_to_upload,
              resource_type="raw", 
