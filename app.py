@@ -59,7 +59,7 @@ db_host = os.environ.get('db_host')
 db_port = os.environ.get('db_port')
 db_user = os.environ.get('db_user')
 db_pass = os.environ.get('db_pass')
-client = MongoClient(db_host,db_port,retryWrites=False)
+client = MongoClient(db_host,int(db_port),retryWrites=False)
 db = client[db_name]
 db.authenticate(db_user,db_pass)
 users_db = db['users']
