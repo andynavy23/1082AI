@@ -115,6 +115,7 @@ def upload_file():
              resource_type="raw", 
              folder = "report_folder/",
              overwrite = True,
+             public_id = file_to_upload_name,
              tags = 'report',
              use_filename = True)
             txt = '上傳成功！'
