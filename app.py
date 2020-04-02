@@ -112,7 +112,7 @@ def upload_file():
             upload_result = upload(file_to_upload,
              resource_type="raw", 
              folder = "report_folder/", 
-             public_id = "report_folder/" + 'test')
+             public_id = 'test')
             txt = '上傳成功！'
         else:
             txt = '請上傳檔案！'

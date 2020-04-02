@@ -14,7 +14,7 @@
  - Mongodb（資料庫連接）
  - Heroku（雲端託管執行）
  - Ngrok（本地開發測試）
- - Lin BOT（聊天機器人框架）
+ - Line BOT（聊天機器人框架）
  - Robo 3T（資料庫GUI介面）
 
 ### 相關套件（可以參考 requirements.txt）：
