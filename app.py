@@ -205,7 +205,7 @@ def handle_text_message(event):
             func()
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='觸發規則！'))
-    elif text == '下載':
+    elif text == '下載報告':
         download_info = create_zip(tags = 'report', resource_type = 'raw')
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=download_info['url']))
