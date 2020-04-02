@@ -106,13 +106,16 @@ def upload_file():
 
     if request.method == 'POST':
         file_to_upload = request.files['file']
-        file_to_upload_name = request.files['file'].read()
+        file_to_upload_name = request.files['file'].name
         print(file_to_upload_name)
         if file_to_upload:
             upload_result = upload(file_to_upload,
              resource_type="raw", 
              folder = "report_folder/", 
-             public_id = 'test')
+             '''
+             public_id = 'test'
+             '''
+             )
             txt = '上傳成功！'
         else:
             txt = '請上傳檔案！'

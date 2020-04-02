@@ -46,7 +46,8 @@
     - message_type（說話類型：text、img、video．．．）
     - source_type（說話來源類型：user、group）
     - datetime（說話紀錄時間點）
-
+    - groupID（群組ID）
+  
 ### Demo：
 1. 在 Heroku 上創建好資料庫後於本地端使用GUI連接確認後續資料有無更新
     - GUI畫面  
