@@ -49,6 +49,10 @@ from linebot.models import (
 from pymongo import MongoClient
 from bson.objectid import ObjectId 
 
+# about cloudinary import
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+
 # connection mongodb
 db_name = os.environ.get('db_name')
 db_host = os.environ.get('db_host')
@@ -92,9 +96,25 @@ def make_static_tmp_dir():
         else:
             raise
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+@app.route('/Admin')
+def Admin():
+    return render_template('Admin.html')
+
+@app.route('/', methods=['GET', 'POST'])
+def upload_file():
+    upload_result = None
+    thumbnail_url1 = None
+    thumbnail_url2 = None
+    if request.method == 'POST':
+        file_to_upload = request.files['file']
+        if file_to_upload:
+            upload_result = upload(file_to_upload)
+            thumbnail_url1, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=100,
+                                                     height=100)
+            thumbnail_url2, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=200,
+                                                     height=100, radius=20, effect="sepia")
+    return render_template('index.html', upload_result=upload_result, thumbnail_url1=thumbnail_url1,
+                           thumbnail_url2=thumbnail_url2)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -130,21 +150,23 @@ def handle_text_message(event):
     try:
         groupID = event.source.group_id
     except:
-        pass
+        groupID = 'X'
     log_info = {"userID": userID,
                 "messageID": event.message.id,
                 "text": text,
                 "message_type": event.message.type,
                 "source_type": event.source.type,
-                "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
+                "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                "groupID": groupID}
     log_db.insert_one(log_info)
 
     if text == '報到':
 
         if isinstance(event.source, SourceGroup):
             user_match_output = users_db.find_one({"userID": userID})
+            group_match_output = users_db.find_one({"groupID": groupID})
 
-            if user_match_output == None:
+            if user_match_output == None and group_match_output == None:
                 user_info = {"groupID": groupID,
                             "userID": userID,
                             "display_name": profile.display_name,
@@ -208,6 +230,25 @@ def rules():
     else:
         return "Rule addition to database failed !!"
 
+'''
+@handler.add(MessageEvent, message=FileMessage)
+def handle_file_message(event):
+    message_content = line_bot_api.get_message_content(event.message.id)
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix='file-', delete=False) as tf:
+        for chunk in message_content.iter_content():
+            tf.write(chunk)
+        tempfile_path = tf.name
+
+    dist_path = tempfile_path + '-' + event.message.file_name
+    dist_name = os.path.basename(dist_path)
+    os.rename(tempfile_path, dist_path)
+
+    line_bot_api.reply_message(
+        event.reply_token, [
+            TextSendMessage(text='Save file.'),
+            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+        ])
+'''
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
