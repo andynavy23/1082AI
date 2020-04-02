@@ -241,8 +241,7 @@ def handle_file_message(event):
     # message_content.iter_content
     upload(message_content,
                 resource_type="raw", 
-                folder = "file_folder/",
-                use_filename = True)
+                folder = "file_folder/")
 
     line_bot_api.reply_message(
         event.reply_token, [
