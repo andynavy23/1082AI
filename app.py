@@ -53,6 +53,7 @@ from bson.objectid import ObjectId
 # about cloudinary import
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
+from cloudinary.uploader import create_zip
 
 # connection mongodb
 db_name = os.environ.get('db_name')
@@ -144,7 +145,6 @@ def callback():
 
     return 'OK'
 
-
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
     text = event.message.text
@@ -204,7 +204,11 @@ def handle_text_message(event):
             rule_string = str(rule_data['rule'])
             func()
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text='觸發規則～'))
+            event.reply_token, TextSendMessage(text='觸發規則！'))
+    elif text == '下載報告':
+        download_info = create_zip(tags = 'report', resource_type = 'raw')
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=download_info['url']))
     else:
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='Echo mode: ' + event.message.text))
