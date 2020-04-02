@@ -239,7 +239,7 @@ def rules():
 def handle_file_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
     # message_content.iter_content
-    upload(message_content,
+    upload(message_content.iter_content,
                 resource_type="raw", 
                 folder = "file_folder/")
 
