@@ -238,19 +238,15 @@ def rules():
 @handler.add(MessageEvent, message=FileMessage)
 def handle_file_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
-    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix='file-', delete=False) as tf:
-        for chunk in message_content.iter_content():
-            tf.write(chunk)
-        tempfile_path = tf.name
-
-    dist_path = tempfile_path + '-' + event.message.file_name
-    dist_name = os.path.basename(dist_path)
-    os.rename(tempfile_path, dist_path)
+    # message_content.iter_content
+    upload(message_content,
+                resource_type="raw", 
+                folder = "file_folder/",
+                use_filename = True)
 
     line_bot_api.reply_message(
         event.reply_token, [
-            TextSendMessage(text='Save file.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+            TextSendMessage(text='Save file.')
         ])
 
 if __name__ == "__main__":
