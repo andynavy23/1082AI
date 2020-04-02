@@ -107,7 +107,7 @@ def upload_file():
     if request.method == 'POST':
         file_to_upload = request.files['file']
         if file_to_upload:
-            upload_result = upload(file_to_upload, { resource_type: "raw" })
+            upload_result = upload(file_to_upload, resource_type="raw" )
             txt = '上傳成功！'
         else:
             txt = '請上傳檔案！'
