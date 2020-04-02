@@ -113,12 +113,14 @@ def upload_file():
             upload_result = upload(file_to_upload,
              resource_type="raw", 
              folder = "report_folder/",
+             overwrite = True,
+             tag = 'report',
              use_filename = True)
             txt = '上傳成功！'
         else:
             txt = '請上傳檔案！'
     else:
-        txt = '上傳失敗！'
+        txt = '上傳失敗，請聯絡老師或助教！'
     return render_template('index.html', upload_result=upload_result, txt=txt)
 
 @app.route("/callback", methods=['POST'])
@@ -155,7 +157,7 @@ def handle_text_message(event):
     try:
         groupID = event.source.group_id
     except:
-        groupID = 'X'
+        groupID = 'No groupID'
     log_info = {"userID": userID,
                 "messageID": event.message.id,
                 "text": text,
@@ -234,19 +236,6 @@ def rules():
         return "Rule added to database successfully !!"
     else:
         return "Rule addition to database failed !!"
-
-@handler.add(MessageEvent, message=FileMessage)
-def handle_file_message(event):
-    message_content = line_bot_api.get_message_content(event.message.id)
-    # message_content.iter_content
-    upload(message_content.iter_content,
-                resource_type="raw", 
-                folder = "file_folder/")
-
-    line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text='Save file.')
-        ])
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
