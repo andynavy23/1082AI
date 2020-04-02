@@ -111,7 +111,8 @@ def upload_file():
         if file_to_upload:
             upload_result = upload(file_to_upload,
              resource_type="raw", 
-             folder = "report_folder/")
+             folder = "report_folder/",
+             use_filename = True)
             txt = '上傳成功！'
         else:
             txt = '請上傳檔案！'
