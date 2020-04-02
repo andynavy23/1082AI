@@ -107,6 +107,7 @@ def upload_file():
     if request.method == 'POST':
         file_to_upload = request.files['file']
         file_to_upload_name = request.files['file'].read()
+        print(file_to_upload_name)
         if file_to_upload:
             upload_result = upload(file_to_upload,
              resource_type="raw", 
@@ -117,7 +118,7 @@ def upload_file():
             txt = '請上傳檔案！'
     else:
         txt = '上傳失敗！'
-    return render_template('index.html', upload_result=upload_result, txt=file_to_upload_name)
+    return render_template('index.html', upload_result=upload_result, txt=txt)
 
 @app.route("/callback", methods=['POST'])
 def callback():
