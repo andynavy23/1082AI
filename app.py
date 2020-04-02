@@ -106,8 +106,12 @@ def upload_file():
 
     if request.method == 'POST':
         file_to_upload = request.files['file']
+        file_to_upload_name = request.files['name']
         if file_to_upload:
-            upload_result = upload(file_to_upload, resource_type="raw" )
+            upload_result = upload(file_to_upload,
+             resource_type="raw", 
+             folder = "report_folder/", 
+             public_id = "report_folder/" + file_to_upload_name)
             txt = '上傳成功！'
         else:
             txt = '請上傳檔案！'
@@ -229,7 +233,6 @@ def rules():
     else:
         return "Rule addition to database failed !!"
 
-'''
 @handler.add(MessageEvent, message=FileMessage)
 def handle_file_message(event):
     message_content = line_bot_api.get_message_content(event.message.id)
@@ -247,7 +250,6 @@ def handle_file_message(event):
             TextSendMessage(text='Save file.'),
             TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
         ])
-'''
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
