@@ -170,10 +170,11 @@ def handle_text_message(event):
     if text == '報到':
 
         if isinstance(event.source, SourceGroup):
-            user_match_output = users_db.find_one({"userID": userID})
-            group_match_output = users_db.find_one({"groupID": groupID})
-
-            if user_match_output == None and group_match_output == None:
+            user_match_output = users_db.find({"userID": str(userID)})
+            group_match_output = users_db.find({"groupID": str(groupID)})
+#  and group_match_output == None
+            print(user_match_output,group_match_output)
+            if user_match_output == None:
                 user_info = {"groupID": groupID,
                             "userID": userID,
                             "display_name": profile.display_name,
