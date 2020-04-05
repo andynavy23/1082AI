@@ -210,8 +210,11 @@ def handle_text_message(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=download_info['url']))
     else:
+        pass
+    '''
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='Echo mode: ' + event.message.text))
+    '''
 
 @handler.add(JoinEvent)
 def handle_join(event):
