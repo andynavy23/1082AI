@@ -23,6 +23,7 @@ from argparse import ArgumentParser
 from werkzeug.utils import secure_filename
 import csv
 import io
+import re
 
 # about Flask import
 from flask import Flask, request, abort, render_template, make_response
@@ -212,7 +213,8 @@ def handle_text_message(event):
         download_info = create_zip(tags = 'report', resource_type = 'raw')
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=download_info['url']))
-    elif text == r'[0-9]+-[^0-9]+-[點名]':
+    elif re.match(r'([0-9]+)-([^0-9]+)-(點名)',text) != None:
+        print(re.match(r'([0-9]+)-([^0-9]+)-(點名)',text))
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='點名成功！'))
     else:
