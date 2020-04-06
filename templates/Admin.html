@@ -1,21 +1,32 @@
 <!DOCTYPE html>
 <html>
+
 <body>
 
-<h1>新增規則表單</h1>
+  <h1>新增規則表單</h1>
 
-<form action="https://ai1082.herokuapp.com/rules" method="get">
-  <label for="fname">Keyword:</label>
-  <input type="text" id="keyword" name="keyword"><br><br>
-  <label for="lname">Rule:</label>
-  <input type="text" id="rule" name="rule"><br><br>
-  <label for="lname">Output:</label>
-  <input type="text" id="output" name="output"><br><br>
-  <input type="submit" value="新增規則">
-  <input type="reset" value="清除">
-</form>
+  <form action="https://ai1082.herokuapp.com/rules" method="get">
+    <label for="fname">Keyword:</label>
+    <input type="text" id="keyword" name="keyword"><br><br>
+    <label for="lname">Rule:</label>
+    <input type="text" id="rule" name="rule"><br><br>
+    <label for="lname">Output:</label>
+    <input type="text" id="output" name="output"><br><br>
+    <input type="submit" value="新增規則">
+    <input type="reset" value="清除">
+  </form>
 
-<p>Click the "新增規則" button and the form-data will be sent to rule database</p>
+  <p>Click the "新增規則" button and the form-data will be sent to rule database</p>
 
+  <h2>資料庫匯出</h1>
+    <input type="button" value="Users資料匯出" style="width:120px;height:40px;font-size:20px;"
+      onclick="location.href='https://ai1082.herokuapp.com/download/users'">
+    <input type="button" value="Groups資料匯出" style="width:120px;height:40px;font-size:20px;"
+      onclick="location.href='https://ai1082.herokuapp.com/download/groups'">
+    <input type="button" value="Log資料匯出" style="width:120px;height:40px;font-size:20px;"
+      onclick="location.href='https://ai1082.herokuapp.com/download/log'">
+    <input type="button" value="Rules資料匯出" style="width:120px;height:40px;font-size:20px;"
+      onclick="location.href='https://ai1082.herokuapp.com/download/rules'">
 </body>
+
 </html>
