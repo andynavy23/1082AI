@@ -22,8 +22,8 @@ import tempfile
 from argparse import ArgumentParser
 from werkzeug.utils import secure_filename
 # about Flask import
-from flask import Flask, request, abort, render_template, make_response
-from flask.ext import excel
+from flask import Flask, request, abort, render_template, make_response, excel
+
 
 from linebot import (
     LineBotApi, WebhookHandler
