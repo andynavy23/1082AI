@@ -22,7 +22,8 @@ import tempfile
 from argparse import ArgumentParser
 from werkzeug.utils import secure_filename
 # about Flask import
-from flask import Flask, request, abort, render_template
+from flask import Flask, request, abort, render_template, make_response
+from flask.ext import excel
 
 from linebot import (
     LineBotApi, WebhookHandler
@@ -243,6 +244,14 @@ def rules():
         return "Rule added to database successfully !!"
     else:
         return "Rule addition to database failed !!"
+
+@app.route('/download')
+def download():
+    data = list(db['log'].find({}))
+    output = excel.make_response_from_array(data, 'csv')
+    output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
