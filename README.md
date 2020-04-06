@@ -331,6 +331,63 @@ def rules():
     else:
         return "Rule addition to database failed !!"
 
+## 新增下載資料路徑 
+@app.route('/download/rules')
+def download_rules():
+    data = db['rules'].find({})
+    csvList = [data[0]]
+    for index in data:
+        csvList.append(index.values())
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerows(csvList)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=rules_export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
+@app.route('/download/groups')
+def download_groups():
+    data = db['groups'].find({})
+    csvList = [data[0]]
+    for index in data:
+        csvList.append(index.values())
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerows(csvList)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=groups_export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
+@app.route('/download/log')
+def download_log():
+    data = db['log'].find({})
+    csvList = [data[0]]
+    for index in data:
+        csvList.append(index.values())
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerows(csvList)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=log_export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
+@app.route('/download/users')
+def download_users():
+    data = db['users'].find({})
+    csvList = [data[0]]
+    for index in data:
+        csvList.append(index.values())
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerows(csvList)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=users_export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
 
 ## 設定 Web App 開啟的 Domain 與 Port
 if __name__ == "__main__":

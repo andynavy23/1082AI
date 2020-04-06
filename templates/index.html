@@ -2,10 +2,10 @@
 <title>上傳作業</title>
 <h1>上傳作業</h1>
 <form action="" method="post" enctype="multipart/form-data" accept=".pdf, .ppt, .pptx">
-  <p><input type="file" name="file">
-     <input type="submit" value="Upload">
+    <p><input type="file" name="file">
+        <input type="submit" value="Upload">
 </form>
 {% if upload_result %}
-  <h3>上傳結果：</h3>
-  <p>{{ txt }}</p>
+<h3>上傳結果：</h3>
+<p>{{ txt }}</p>
 {% endif %}
