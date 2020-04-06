@@ -316,6 +316,20 @@ def download_users():
     output.headers["Content-type"] = "text/csv"
     return output
 
+@app.route('/download/rollcall')
+def download_rollcall():
+    data = db['rollcall'].find({})
+    csvList = [data[0]]
+    for index in data:
+        csvList.append(index.values())
+    si = io.StringIO()
+    cw = csv.writer(si)
+    cw.writerows(csvList)
+    output = make_response(si.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename=rollcall_export.csv"
+    output.headers["Content-type"] = "text/csv"
+    return output
+
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
         usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
