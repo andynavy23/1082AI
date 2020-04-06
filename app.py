@@ -72,6 +72,7 @@ users_db = db['users']
 groups_db = db['groups']
 rules_db = db['rules']
 log_db = db['log']
+rollcall_db = db['rollcall']
 
 app = Flask(__name__)
 
@@ -214,7 +215,14 @@ def handle_text_message(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=download_info['url']))
     elif re.match(r'([0-9]+)-([^0-9]+)-(點名)',text) != None:
-        print(re.match(r'([0-9]+)-([^0-9]+)-(點名)',text))
+        rollcall_info = {"userID": userID,
+                "messageID": event.message.id,
+                "text": text,
+                "message_type": event.message.type,
+                "source_type": event.source.type,
+                "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+                "groupID": groupID}
+        rollcall_db.insert_one(rollcall_info)
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text='點名成功！'))
     else:
