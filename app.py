@@ -225,6 +225,10 @@ def handle_text_message(event):
         rollcall_db.insert_one(rollcall_info)
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=profile.display_name + '點名成功！'))
+    elif text == 'help':
+        content = '功能說明：\n點名格式（數字-姓名-點名）ex:10312345-王小明-點名\n上傳檔案網址：https://ai1082.herokuapp.com'
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=content))
     else:
         pass
     '''
@@ -234,7 +238,7 @@ def handle_text_message(event):
 
 @handler.add(JoinEvent)
 def handle_join(event):
-    newcoming_text = "謝謝邀請我這個機器來此群組！！我會盡力為大家服務的～"
+    newcoming_text = "大家好，我是CA！\n需要功能說明請打help"
     groupID = {"groupID": event.source.group_id, "datetime": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())}
     
     groups_db.insert_one(groupID)
