@@ -212,6 +212,9 @@ def handle_text_message(event):
         download_info = create_zip(tags = 'report', resource_type = 'raw')
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=download_info['url']))
+    elif text == r'[0-9]+-[^0-9]+-[點名]':
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='點名成功！'))
     else:
         pass
     '''
