@@ -226,7 +226,7 @@ def handle_text_message(event):
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=profile.display_name + '點名成功！'))
     elif text == 'help':
-        content = '功能說明：\n點名格式（數字-姓名-點名）\nex:10312345-王小明-點名\n上傳檔案網址：\nhttps://ai1082.herokuapp.com'
+        content = '功能說明：\n輸入「報到」進行群組內成員資料登記\n\n點名格式（數字-姓名-點名）\nex:10312345-王小明-點名\n\n上傳檔案網址：\nhttps://ai1082.herokuapp.com'
         line_bot_api.reply_message(
             event.reply_token, TextSendMessage(text=content))
     else:
